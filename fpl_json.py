@@ -49,11 +49,11 @@ def extractDataFromAllDetailed():
             result = i['id']
             dreamteam[result] = [ i['ict_index'], i['influence'], i['creativity'], i['threat'], i['value_form'],
                                   i['web_name'].encode('ascii', 'ignore').decode('ascii'), i['now_cost'],
-                                  i['minutes'], i['bps'], i['points_per_game'], i['chance_of_playing_this_round']]
+                                  i['minutes'], i['bps'], i['points_per_game'], i['event_points'], i['chance_of_playing_this_round']]
 
 def writeToCsv():
     global dreamteam
-    top_row = ['Id', 'ict-index', 'influence', 'creativity', 'threat', 'value_form', 'web_name', 'now_cost', 'minutes', 'bps', 'points-per-game', 'playing-chance']
+    top_row = ['Id', 'ict-index', 'influence', 'creativity', 'threat', 'value_form', 'web_name', 'now_cost', 'minutes', 'bps', 'points-per-game', 'points-last-game', 'playing-chance']
     timestr = time.strftime("%Y%m%d-%H%M%S")
     with open(timestr+'.csv', 'wb') as csv_file:
         writer = csv.writer(csv_file)
