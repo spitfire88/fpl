@@ -24,7 +24,10 @@ my_team = {}
 dreamteam = {}
 
 positions = {1:'GK', 2:'DF', 3:'MD', 4:'ST'}
-
+team = {1:'MUN', 11:'EVE', 20:'SOU', 3:'ARS', 35:'WBA',
+        14:'LIV', 4:'NEW', 43:'MCI', 110:'STK', 57:'WAT',
+        6:'TOT', 8:'CHE', 80:'SWA', 90:'BUR', 91:'BOU',
+        36:'BHA', 13:'LEI', 38:'HUD', 21:'WHU', 31:'CRY'}
 
 def proxyCheck():
     global proxy_required
@@ -45,20 +48,19 @@ def getAllPlayersDetailedJson():
         json.dump(all_detailed, f)
 
 def extractDataFromAllDetailed():
-    global all_detailed
     global dreamteam
     for i in all_detailed['elements']:
         if (10 < float(i['influence'])):
             key = i['id']
             dreamteam[key] = [i['ict_index'], i['influence'], i['creativity'], i['threat'], i['value_form'],
                               i['web_name'].encode('ascii', 'ignore').decode('ascii'), i['now_cost'],
-                              positions.get(i['element_type'], 'default'), i['minutes'], i['bps'],
-                              i['points_per_game'], i['event_points'], i['chance_of_playing_this_round']]
+                              positions.get(i['element_type'], 'default'), team.get(i['team_code'], 'default'),
+                              i['minutes'], i['bps'], i['points_per_game'], i['event_points'],
+                              i['chance_of_playing_this_round']]
 
 def writeToCsv():
-    global dreamteam
     top_row = ['Id', 'ict-index', 'influence', 'creativity', 'threat', 'value_form', 'web_name', 'now_cost',
-               'position', 'minutes', 'bps', 'points-per-game', 'points-last-game', 'playing-chance']
+               'position', 'team', 'minutes', 'bps', 'points-per-game', 'points-last-game', 'playing-chance']
     timestr = time.strftime("%Y%m%d-%H%M%S")
     with open(timestr+'.csv', 'wb') as csv_file:
         writer = csv.writer(csv_file)
