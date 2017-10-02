@@ -23,6 +23,9 @@ all_detailed = {}
 my_team = {}
 dreamteam = {}
 
+positions = {1:'GK', 2:'DF', 3:'MD', 4:'ST'}
+
+
 def proxyCheck():
     global proxy_required
     try:
@@ -46,14 +49,16 @@ def extractDataFromAllDetailed():
     global dreamteam
     for i in all_detailed['elements']:
         if (10 < float(i['influence'])):
-            result = i['id']
-            dreamteam[result] = [ i['ict_index'], i['influence'], i['creativity'], i['threat'], i['value_form'],
-                                  i['web_name'].encode('ascii', 'ignore').decode('ascii'), i['now_cost'],
-                                  i['minutes'], i['bps'], i['points_per_game'], i['event_points'], i['chance_of_playing_this_round']]
+            key = i['id']
+            dreamteam[key] = [i['ict_index'], i['influence'], i['creativity'], i['threat'], i['value_form'],
+                              i['web_name'].encode('ascii', 'ignore').decode('ascii'), i['now_cost'],
+                              positions.get(i['element_type'], 'default'), i['minutes'], i['bps'],
+                              i['points_per_game'], i['event_points'], i['chance_of_playing_this_round']]
 
 def writeToCsv():
     global dreamteam
-    top_row = ['Id', 'ict-index', 'influence', 'creativity', 'threat', 'value_form', 'web_name', 'now_cost', 'minutes', 'bps', 'points-per-game', 'points-last-game', 'playing-chance']
+    top_row = ['Id', 'ict-index', 'influence', 'creativity', 'threat', 'value_form', 'web_name', 'now_cost',
+               'position', 'minutes', 'bps', 'points-per-game', 'points-last-game', 'playing-chance']
     timestr = time.strftime("%Y%m%d-%H%M%S")
     with open(timestr+'.csv', 'wb') as csv_file:
         writer = csv.writer(csv_file)
