@@ -1,7 +1,6 @@
 import requests
 import eventlet
 import json
-from pprint import pprint
 import operator
 import csv
 import time
@@ -17,6 +16,7 @@ proxyDict = {
             }
 
 main_url = "https://fantasy.premierleague.com/drf/bootstrap-static"
+player_url = "https://fantasy.premierleague.com/drf/element-summary/"
 proxy_check_url = "http://www.google.com"
 proxy_required = False
 all_detailed = {}
@@ -47,20 +47,32 @@ def getAllPlayersDetailedJson():
     with open('AllPlayersDetailed.json', 'w') as f:
         json.dump(all_detailed, f)
 
+def getPlayerJson(p_id):
+    if proxy_required:
+        return requests.get(player_url+str(p_id), proxies=proxyDict).json()
+    else:
+        return requests.get(player_url+str(p_id)).json()
+
 def extractDataFromAllDetailed():
     global dreamteam
+    print "Processing..."
     for i in all_detailed['elements']:
         if (10 < float(i['influence'])):
             key = i['id']
+            p = getPlayerJson(key)['history'][-1]
+            #print(json.dumps(p, indent=2))
             dreamteam[key] = [i['ict_index'], i['influence'], i['creativity'], i['threat'], i['value_form'],
                               i['web_name'].encode('ascii', 'ignore').decode('ascii'), i['now_cost'],
                               positions.get(i['element_type'], 'default'), team.get(i['team_code'], 'default'),
-                              i['minutes'], i['bps'], i['points_per_game'], i['event_points'],
-                              i['chance_of_playing_this_round']]
+                              i['minutes'], i['bps'], i['points_per_game'], i['event_points'], i['chance_of_playing_this_round'],
+                              p['big_chances_created'], p['attempted_passes'], p['completed_passes'], p['was_home'],
+                              p['clean_sheets'], p['assists'], p['open_play_crosses'], p['dribbles']]
 
 def writeToCsv():
     top_row = ['Id', 'ict-index', 'influence', 'creativity', 'threat', 'value_form', 'web_name', 'now_cost',
-               'position', 'team', 'minutes', 'bps', 'points-per-game', 'points-last-game', 'playing-chance']
+               'position', 'team', 'minutes', 'bps', 'points-per-game', 'points-last-game', 'playing-chance',
+               'big_chances_created', 'attempted_passes', 'completed_passes', 'was_home', 'clean_sheets',
+               'assists', 'open_play_crosses', 'dribbles']
     timestr = time.strftime("%Y%m%d-%H%M%S")
     with open(timestr+'.csv', 'wb') as csv_file:
         writer = csv.writer(csv_file)
