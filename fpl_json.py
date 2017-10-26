@@ -1,7 +1,5 @@
 import requests
-import eventlet
 import json
-import operator
 import csv
 import time
 
