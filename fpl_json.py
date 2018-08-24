@@ -22,10 +22,30 @@ my_team = {}
 dreamteam = {}
 
 positions = {1:'GK', 2:'DF', 3:'MD', 4:'ST'}
-team = {1:'MUN', 11:'EVE', 20:'SOU', 3:'ARS', 35:'WBA',
-        14:'LIV', 4:'NEW', 43:'MCI', 110:'STK', 57:'WAT',
-        6:'TOT', 8:'CHE', 80:'SWA', 90:'BUR', 91:'BOU',
-        36:'BHA', 13:'LEI', 38:'HUD', 21:'WHU', 31:'CRY'}
+team = {1:'MUN',
+        3:'ARS',
+        4:'NEW',
+        6:'TOT',
+        8:'CHE',
+        11:'EVE',
+        13:'LEI',
+        14:'LIV',
+        20:'SOU',
+        21:'WHU',
+        31:'CRY',
+        35:'WBA',
+        36:'BHA',
+        38:'HUD',
+        39:'WOL',
+        43:'MCI',
+        54:'FUL',
+        57:'WAT',
+        80:'SWA',
+        90:'BUR',
+        91:'BOU',
+        97:'CAR',
+        110:'STK'
+        }
 
 def proxyCheck():
     global proxy_required
@@ -81,7 +101,7 @@ def writeToCsv():
 def main():
     proxyCheck()
     getAllPlayersDetailedJson()
-    #print(json.dumps(all_detailed, indent=2))
+    print(json.dumps(all_detailed, indent=2))
     extractDataFromAllDetailed()
     writeToCsv()
 
