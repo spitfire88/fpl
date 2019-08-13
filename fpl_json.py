@@ -13,19 +13,20 @@ proxyDict = {
              "ftp"   : ftp_proxy
             }
 
-main_url = "https://fantasy.premierleague.com/drf/bootstrap-static"
-player_url = "https://fantasy.premierleague.com/drf/element-summary/"
+main_url = "https://fantasy.premierleague.com/api/bootstrap-static"
+player_url = "https://fantasy.premierleague.com/api/element-summary/"
 proxy_check_url = "http://www.google.com"
 proxy_required = False
 all_detailed = {}
 my_team = {}
 dreamteam = {}
 
-positions = {1:'GK', 2:'DF', 3:'MD', 4:'ST'}
+positions = {1:'GKP', 2:'DEF', 3:'MID', 4:'FWD'}
 team = {1:'MUN',
         3:'ARS',
         4:'NEW',
         6:'TOT',
+        7:'AVL',
         8:'CHE',
         11:'EVE',
         13:'LEI',
@@ -38,6 +39,8 @@ team = {1:'MUN',
         38:'HUD',
         39:'WOL',
         43:'MCI',
+        45:'NOR',
+        49:'SHU',
         54:'FUL',
         57:'WAT',
         80:'SWA',
@@ -52,7 +55,7 @@ def proxyCheck():
     try:
         requests.get(proxy_check_url, verify=False, timeout=1)
     except IOError:
-        print "Checking with proxy..."
+        print("Checking with proxy...")
         requests.get(proxy_check_url, proxies=proxyDict, verify=False, timeout=1)
         proxy_required = True
 
@@ -73,26 +76,24 @@ def getPlayerJson(p_id):
 
 def extractDataFromAllDetailed():
     global dreamteam
-    print "Processing..."
+    print("Processing...")
     for i in all_detailed['elements']:
         if (10 < float(i['influence'])):
             key = i['id']
             p = getPlayerJson(key)['history'][-1]
-            #print(json.dumps(p, indent=2))
+            print(json.dumps(p, indent=2))
             dreamteam[key] = [i['ict_index'], i['influence'], i['creativity'], i['threat'], i['value_form'],
                               i['web_name'].encode('ascii', 'ignore').decode('ascii'), i['now_cost'],
                               positions.get(i['element_type'], 'default'), team.get(i['team_code'], 'default'),
                               i['minutes'], i['bps'], i['points_per_game'], i['event_points'], i['chance_of_playing_this_round'],
-                              p['big_chances_created'], p['attempted_passes'], p['completed_passes'], p['was_home'],
-                              p['clean_sheets'], p['assists'], p['open_play_crosses'], p['dribbles']]
+                              p['was_home'], i['clean_sheets'], i['assists']]
 
 def writeToCsv():
     top_row = ['Id', 'ict-index', 'influence', 'creativity', 'threat', 'value_form', 'web_name', 'now_cost',
                'position', 'team', 'minutes', 'bps', 'points-per-game', 'points-last-game', 'playing-chance',
-               'big_chances_created', 'attempted_passes', 'completed_passes', 'was_home', 'clean_sheets',
-               'assists', 'open_play_crosses', 'dribbles']
+               'was_home', 'clean_sheets', 'assists']
     timestr = time.strftime("%Y%m%d-%H%M%S")
-    with open(timestr+'.csv', 'wb') as csv_file:
+    with open(timestr+'.csv', 'w') as csv_file:
         writer = csv.writer(csv_file)
         writer.writerow(top_row)
         for key, value in dreamteam.items():
