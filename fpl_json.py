@@ -81,17 +81,17 @@ def extractDataFromAllDetailed():
         if (10 < float(i['influence'])):
             key = i['id']
             p = getPlayerJson(key)['history'][-1]
-            print(json.dumps(p, indent=2))
+            #print(json.dumps(p, indent=2))
             dreamteam[key] = [i['ict_index'], i['influence'], i['creativity'], i['threat'], i['value_form'],
                               i['web_name'].encode('ascii', 'ignore').decode('ascii'), i['now_cost'],
                               positions.get(i['element_type'], 'default'), team.get(i['team_code'], 'default'),
-                              i['minutes'], i['bps'], i['points_per_game'], i['event_points'], i['chance_of_playing_this_round'],
-                              p['was_home'], i['clean_sheets'], i['assists']]
+                              i['minutes'], i['bps'], i['bonus'], i['points_per_game'], i['event_points'],
+                              i['status'], p['was_home'], i['clean_sheets'], i['goals_scored'], i['assists']]
 
 def writeToCsv():
     top_row = ['Id', 'ict-index', 'influence', 'creativity', 'threat', 'value_form', 'web_name', 'now_cost',
-               'position', 'team', 'minutes', 'bps', 'points-per-game', 'points-last-game', 'playing-chance',
-               'was_home', 'clean_sheets', 'assists']
+               'position', 'team', 'minutes', 'bps', 'bonus', 'points-per-game', 'points-last-game', 'status',
+               'was_home', 'clean_sheets', 'goals_scored', 'assists']
     timestr = time.strftime("%Y%m%d-%H%M%S")
     with open(timestr+'.csv', 'w') as csv_file:
         writer = csv.writer(csv_file)
